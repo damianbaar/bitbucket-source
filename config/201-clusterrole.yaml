@@ -1,0 +1,54 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: bitbucket-controller
+rules:
+  - apiGroups:
+      - sources.eventing.knative.dev
+    resources:
+      - bitbucketsources
+    verbs: &everything
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - sources.eventing.knative.dev
+    resources:
+      - bitbucketsources/status
+    verbs:
+      - get
+      - update
+      - patch
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+    verbs: *everything
+  - apiGroups:
+      - eventing.knative.dev
+    resources:
+      - channels
+      - brokers
+    verbs: &readOnly
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - serving.knative.dev
+    resources:
+      - services
+    verbs: *everything
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs: *readOnly
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs: *everything

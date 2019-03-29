@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    control-plane: bitbucket-controller-manager
+  name: bitbucket-controller-manager
+  namespace: knative-sources
+spec:
+  selector:
+    matchLabels:
+      control-plane: bitbucket-controller-manager
+  serviceName: bitbucket-controller-manager
+  template:
+    metadata:
+      labels:
+        control-plane: bitbucket-controller-manager
+    spec:
+      containers:
+        - image: github.com/knative/eventing-sources/contrib/bitbucket/cmd/controller
+          name: manager
+          env:
+            - name: BB_RA_IMAGE
+              value: github.com/knative/eventing-sources/contrib/bitbucket/cmd/receive_adapter
+          resources:
+            limits:
+              cpu: 100m
+              memory: 30Mi
+            requests:
+              cpu: 20m
+              memory: 20Mi
+      serviceAccount: bitbucket-controller-manager
+      terminationGracePeriodSeconds: 10
