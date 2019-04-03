@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/knative/eventing-sources/contrib/bitbucket/pkg/bbclient"
 	"github.com/knative/pkg/logging"
+	"github.com/nachocano/bitbucket-source/pkg/bbclient"
 	"golang.org/x/oauth2/bitbucket"
 	"golang.org/x/oauth2/clientcredentials"
 )
