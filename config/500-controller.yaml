@@ -30,11 +30,11 @@ spec:
         control-plane: bitbucket-controller-manager
     spec:
       containers:
-        - image: github.com/knative/eventing-sources/contrib/bitbucket/cmd/controller
+        - image: github.com/nachocano/bitbucket-source/cmd/controller
           name: manager
           env:
             - name: BB_RA_IMAGE
-              value: github.com/knative/eventing-sources/contrib/bitbucket/cmd/receive_adapter
+              value: github.com/nachocano/bitbucket-source/cmd/receive_adapter
           resources:
             limits:
               cpu: 100m
