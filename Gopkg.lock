@@ -318,21 +318,6 @@
   version = "1.0.1"
 
 [[projects]]
-  branch = "master"
-  digest = "1:a02e2436adf3ce4962c824e4c54d634b4dc82d0cc43c7a1a9d470f5d85c7f9b1"
-  name = "github.com/nachocano/bitbucket-source"
-  packages = [
-    "pkg/adapter",
-    "pkg/apis",
-    "pkg/apis/sources/v1alpha1",
-    "pkg/bbclient",
-    "pkg/reconciler",
-    "pkg/reconciler/resources",
-  ]
-  pruneopts = "NUT"
-  revision = "2d8f399e45673a36bdeda01f015b2fa7809fccea"
-
-[[projects]]
   digest = "1:93b1d84c5fa6d1ea52f4114c37714cddd84d5b78f151b62bb101128dd51399bf"
   name = "github.com/pborman/uuid"
   packages = ["."]
@@ -899,12 +884,6 @@
     "github.com/knative/serving/pkg/apis/serving/v1alpha1",
     "github.com/knative/test-infra/scripts",
     "github.com/knative/test-infra/tools/dep-collector",
-    "github.com/nachocano/bitbucket-source/pkg/adapter",
-    "github.com/nachocano/bitbucket-source/pkg/apis",
-    "github.com/nachocano/bitbucket-source/pkg/apis/sources/v1alpha1",
-    "github.com/nachocano/bitbucket-source/pkg/bbclient",
-    "github.com/nachocano/bitbucket-source/pkg/reconciler",
-    "github.com/nachocano/bitbucket-source/pkg/reconciler/resources",
     "go.uber.org/zap",
     "golang.org/x/oauth2",
     "golang.org/x/oauth2/bitbucket",
