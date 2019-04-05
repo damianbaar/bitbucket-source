@@ -18,9 +18,9 @@ type FakeBitBucketSources struct {
 	ns   string
 }
 
-var bitbucketsourcesResource = schema.GroupVersionResource{Group: "sources", Version: "v1alpha1", Resource: "bitbucketsources"}
+var bitbucketsourcesResource = schema.GroupVersionResource{Group: "sources.eventing.knative.dev", Version: "v1alpha1", Resource: "bitbucketsources"}
 
-var bitbucketsourcesKind = schema.GroupVersionKind{Group: "sources", Version: "v1alpha1", Kind: "BitBucketSource"}
+var bitbucketsourcesKind = schema.GroupVersionKind{Group: "sources.eventing.knative.dev", Version: "v1alpha1", Kind: "BitBucketSource"}
 
 // Get takes name of the bitBucketSource, and returns the corresponding bitBucketSource object, and an error if there is any.
 func (c *FakeBitBucketSources) Get(name string, options v1.GetOptions) (result *v1alpha1.BitBucketSource, err error) {

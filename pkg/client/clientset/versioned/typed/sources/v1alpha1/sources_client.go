@@ -14,7 +14,7 @@ type SourcesV1alpha1Interface interface {
 	BitBucketSourcesGetter
 }
 
-// SourcesV1alpha1Client is used to interact with features provided by the sources group.
+// SourcesV1alpha1Client is used to interact with features provided by the sources.eventing.knative.dev group.
 type SourcesV1alpha1Client struct {
 	restClient rest.Interface
 }

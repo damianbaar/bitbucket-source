@@ -36,7 +36,7 @@ func (f *genericInformer) Lister() cache.GenericLister {
 // TODO extend this to unknown resources with a client pool
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
-	// Group=sources, Version=v1alpha1
+	// Group=sources.eventing.knative.dev, Version=v1alpha1
 	case v1alpha1.SchemeGroupVersion.WithResource("bitbucketsources"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Sources().V1alpha1().BitBucketSources().Informer()}, nil
 
