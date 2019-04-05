@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,16 +18,12 @@ package v1alpha1
 
 import "context"
 
-func (s *Service) SetDefaults(ctx context.Context) {
-	s.Spec.SetDefaults(ctx)
+// SetDefaults sets default values on the ServerlessServiceSpec.
+func (c *ServerlessService) SetDefaults(ctx context.Context) {
+	c.Spec.SetDefaults(ctx)
 }
 
-func (ss *ServiceSpec) SetDefaults(ctx context.Context) {
-	if ss.RunLatest != nil {
-		ss.RunLatest.Configuration.SetDefaults(ctx)
-	} else if ss.DeprecatedPinned != nil {
-		ss.DeprecatedPinned.Configuration.SetDefaults(ctx)
-	} else if ss.Release != nil {
-		ss.Release.Configuration.SetDefaults(ctx)
-	}
+// SetDefaults sets default values on the ServerlessServiceSpec.
+func (c *ServerlessServiceSpec) SetDefaults(ctx context.Context) {
+	// Nothing is defaultable so far.
 }

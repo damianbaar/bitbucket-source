@@ -245,7 +245,7 @@
   version = "v0.5.0"
 
 [[projects]]
-  digest = "1:0a1e46cb4e215d6054a68315fdd996c87df6d4908a41b765a4fb583248ad38ba"
+  digest = "1:d9123e63c1a0241e114a7b711c150d3d9e193ed96f3714c000d31c0768acf88a"
   name = "github.com/knative/pkg"
   packages = [
     "apis",
@@ -258,10 +258,10 @@
     "logging/logkey",
   ]
   pruneopts = "NUT"
-  revision = "915415e7be67bf8fb05249fe3f1bad25fcaf7f50"
+  revision = "60fdcbcabd2faeb34328d8b2725dc76c59189453"
 
 [[projects]]
-  digest = "1:3b3629f60ec49dcacd63617873e51f560d98dde2f2a6bbd1b9060dce1fa85ab9"
+  digest = "1:a8d21ce0ca98bb38c62bbb45be63ca3b1570370c9c8c7cf10b63b15354a42d94"
   name = "github.com/knative/serving"
   packages = [
     "pkg/apis/autoscaling",
@@ -271,8 +271,7 @@
     "pkg/apis/serving/v1alpha1",
   ]
   pruneopts = "NUT"
-  revision = "4913b81a4305b174ed07c54298be6ddeb3dd874e"
-  version = "v0.4.1"
+  revision = "9a44df0e64edcb943c7edfe2d3eac2be41aa2316"
 
 [[projects]]
   branch = "master"

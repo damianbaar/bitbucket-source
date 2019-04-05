@@ -32,7 +32,11 @@ required = [
 
 [[constraint]]
   name = "github.com/knative/serving"
-  version = "v0.4.1"
+  # HEAD as of 2019-03-21
+  revision = "9a44df0e64edcb943c7edfe2d3eac2be41aa2316"
+  # revert revision when on v0.5.0, this is done to support a pkg update on webhooks context.
+  # See: https://github.com/knative/pkg/commit/60fdcbcabd2faeb34328d8b2725dc76c59189453
+  # version = "v0.5.0"
 
 [[constraint]]
   name = "sigs.k8s.io/controller-runtime"
@@ -42,10 +46,12 @@ required = [
   name = "github.com/knative/eventing-sources"
   version = "=0.5.0"
 
-[[override]]
+# Constrain the version of knative/pkg we would like to import.
+# This controls when we upgrade apis independently of Serving.
+[[constraint]]
   name = "github.com/knative/pkg"
-  # HEAD as of 2019-03-18
-  revision = "915415e7be67bf8fb05249fe3f1bad25fcaf7f50"
+  # HEAD as of 2019-03-21
+  revision = "60fdcbcabd2faeb34328d8b2725dc76c59189453"
 
 [[override]]
   name = "k8s.io/api"

@@ -351,6 +351,7 @@ func TestHandleEvent(t *testing.T) {
 			"ce-request-uuid": {`"12345"`},
 			"ce-event-key":    {`"repo:push"`},
 			"content-type":    {"application/json"},
+			"connection":      {"close"},
 		},
 		Body: `{"actor":{"type":"","username":"","display_name":"","uuid":"","links":{"self":{"href":""},"html":{"href":""},"avatar":{"href":""}}},"repository":{"type":"","links":{"self":{"href":"http://bitbucket.com/a/b"},"html":{"href":""},"avatar":{"href":""}},"uuid":"","project":{"type":"","project":"","uuid":"","links":{"html":{"href":""},"avatar":{"href":""}},"key":""},"full_name":"","name":"","website":"","owner":{"type":"","username":"","display_name":"","uuid":"","links":{"self":{"href":""},"html":{"href":""},"avatar":{"href":""}}},"scm":"","is_private":false},"push":{"changes":null}}`,
 	}
