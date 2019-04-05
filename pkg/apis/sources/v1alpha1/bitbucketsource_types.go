@@ -201,7 +201,3 @@ type BitBucketSourceList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []BitBucketSource `json:"items"`
 }
-
-func init() {
-	SchemeBuilder.Register(&BitBucketSource{}, &BitBucketSourceList{})
-}
