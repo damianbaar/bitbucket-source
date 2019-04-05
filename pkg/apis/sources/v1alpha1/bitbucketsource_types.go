@@ -15,7 +15,7 @@ var _ runtime.Object = (*BitBucketSource)(nil)
 var _ = duck.VerifyType(&BitBucketSource{}, &duckv1alpha1.Conditions{})
 
 // BitBucketSourceSpec defines the desired state of BitBucketSource.
-// +kubebuilder:categories=all,knative,eventing,sources
+// +k8s:openapi-gen=true
 type BitBucketSourceSpec struct {
 	// ServiceAccountName holds the name of the Kubernetes service account
 	// as which the underlying K8s resources should be run. If unspecified
@@ -183,9 +183,6 @@ func (s *BitBucketSourceStatus) MarkNoWebHook(reason, messageFormat string, mess
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // BitBucketSource is the Schema for the bitbucketsources API.
-// +k8s:openapi-gen=true
-// +kubebuilder:subresource:status
-// +kubebuilder:categories=all,knative,eventing,sources
 type BitBucketSource struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
