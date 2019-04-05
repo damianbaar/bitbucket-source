@@ -1,7 +1,7 @@
 # BitBucket Source example
 
 BitBucket Source example shows how to wire BitBucket events for consumption
-by a Knative Service.
+by a Knative Service using Knative Eventing.
 
 ## Deployment Steps
 
@@ -11,16 +11,15 @@ You will need:
 
 1. An internet-accessible Kubernetes cluster with Knative Serving
    installed. Follow the [installation
-   instructions](https://github.com/knative/docs/blob/master/install/README.md)
+   instructions](https://www.knative.dev/docs/install/)
    if you need to create one.
 1. Ensure Knative Serving is [configured with a domain
-   name](https://github.com/knative/docs/blob/master/serving/using-a-custom-domain.md)
+   name](https://www.knative.dev/docs/serving/using-a-custom-domain/)
    that allows BitBucket to call into the cluster.
-1. If you're using GKE, you'll also want to [assign a static IP address](https://github.com/knative/docs/blob/master/serving/gke-assigning-static-ip-address.md).
+1. If you're using GKE, you'll also want to [assign a static IP address](https://www.knative.dev/docs/serving/gke-assigning-static-ip-address/).
 1. Install [Knative
-   Eventing](https://github.com/knative/docs/tree/master/eventing). Those
-   instructions also install the default eventing sources, including
-   the `BitBucketSource` we'll use.
+   Eventing](https://www.knative.dev/docs/install/index.html). Those
+   instructions also install the default eventing sources.
 
 ### Create a Knative Service
 
