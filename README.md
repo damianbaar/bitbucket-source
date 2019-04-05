@@ -1,7 +1,6 @@
-# BitBucket Source example
+# BitBucket Source
 
-BitBucket Source example shows how to wire BitBucket events for consumption
-by a Knative Service using Knative Eventing.
+This repository implements a simple Event Source to wire BitBucket events into [Knative Eventing](https://github.com/knative/eventing). 
 
 ## Deployment Steps
 
@@ -20,8 +19,13 @@ You will need:
 1. Install [Knative
    Eventing](https://www.knative.dev/docs/install/index.html). Those
    instructions also install the default eventing sources.
+1. Finally, install the BitBucket source with `ko apply -f ./config`
 
-### Create a Knative Service
+### Example
+
+Now we are going to show an example of how to consume BitBucket events.
+
+#### Create a Knative Service
 
 To verify the `BitBucketSource` is working, we will create a simple Knative
 `Service` that dumps incoming messages to its log. The `service.yaml` file in the `sample` folder
@@ -47,7 +51,7 @@ Enter the following command to create the service from `service.yaml`:
 kubectl --namespace default apply --filename ./sample/service.yaml
 ```
 
-### Create a BitBucket OAuth Consumer
+#### Create a BitBucket OAuth Consumer
 
 Create an [OAuth Consumer](https://confluence.atlassian.com/bitbucket/oauth-on-bitbucket-cloud-238027431.html#OAuthonBitbucketCloud-Createaconsumer)
 in BitBucket that the BitBucket Source can use to register webhooks with
@@ -90,7 +94,7 @@ Then, apply the secret using `kubectl`:
 kubectl --namespace default apply --filename ./sample/bitbucket-secret.yaml
 ```
 
-### Create Event Source for BitBucket Events
+#### Create an Event Source for BitBucket Events
 
 In order to receive BitBucket events, you have to create a concrete Event
 Source for a specific namespace. Be sure to replace the
@@ -127,7 +131,7 @@ Then, apply that yaml using `kubectl`:
 kubectl --namespace default apply --filename ./sample/bitbucket-source.yaml
 ```
 
-### Verify
+#### Verify
 
 Verify that the BitBucket webhook was created by looking at the list of
 webhooks under the Settings tab in your BitBucket repository. A hook
@@ -137,7 +141,7 @@ should be listed that points to your Knative cluster. If you edit it, you can se
 
 ![BitBucket Webhook](./sample/webhook.png "BitBucket Webhook")
 
-### Create Events
+#### Create Events
 
 Create a push in your BitBucket repository. We will verify
 that the BitBucket event was sent to the Knative eventing system
@@ -177,7 +181,7 @@ X-Request-Id: 81b4603c-3f2b-9e0b-ace4-fe3a7aeb2047
 {...}
 ```
 
-### Cleanup
+#### Cleanup
 
 You can remove the BitBucket webhook by deleting the BitBucket Source:
 
