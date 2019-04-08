@@ -4,8 +4,6 @@ This repository implements a simple Event Source to wire BitBucket events into [
 
 ## Deployment Steps
 
-### Prerequisites
-
 You will need:
 
 1. An internet-accessible Kubernetes cluster with Knative Serving
@@ -21,11 +19,34 @@ You will need:
    instructions also install the default eventing sources.
 1. Finally, install the BitBucket source with `ko apply -f ./config`
 
-### Example
+## BitBucket Source Spec Fields
+
+The BitBucketSource fires a new event for selected
+[BitBucket event types](https://confluence.atlassian.com/bitbucket/event-payloads-740262817.html#EventPayloads-Repositoryevents). Here are the `spec` fields:
+
+- `ownerAndRepository`: `string` The BitBucket owner/team and repository to receive
+  events from. The repository may be left off to receive events from an entire
+  team.
+- `eventTypes`: `[]string` A list of
+  [event types](https://confluence.atlassian.com/bitbucket/event-payloads-740262817.html#EventPayloads-Repositoryevents) in
+  "event key" format.
+- `consumerKey.secretKeyRef`:
+  [SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.12/#secretkeyselector-v1-core)
+  containing a BitBucket consumer key for configuring a BitBucket OAuth client. Must be set.
+- `consumerSecret.secretKeyRef`:
+  [SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.12/#secretkeyselector-v1-core)
+  containing a BitBucket consumer secret for configuring a BitBucket OAuth client. Must be set.
+- `serviceAccountName`: `string` The name of the ServiceAccount to run the
+  container as.
+- `sink`:
+  [ObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.12/#objectreference-v1-core)
+  A reference to the object that should receive events.
+
+## Example
 
 Now we are going to show an example of how to consume BitBucket events.
 
-#### Create a Knative Service
+### Create a Knative Service
 
 To verify the `BitBucketSource` is working, we will create a simple Knative
 `Service` that dumps incoming messages to its log. The `service.yaml` file in the `sample` folder
@@ -51,7 +72,7 @@ Enter the following command to create the service from `service.yaml`:
 kubectl --namespace default apply --filename ./sample/service.yaml
 ```
 
-#### Create a BitBucket OAuth Consumer
+### Create a BitBucket OAuth Consumer
 
 Create an [OAuth Consumer](https://confluence.atlassian.com/bitbucket/oauth-on-bitbucket-cloud-238027431.html#OAuthonBitbucketCloud-Createaconsumer)
 in BitBucket that the BitBucket Source can use to register webhooks with
@@ -94,7 +115,7 @@ Then, apply the secret using `kubectl`:
 kubectl --namespace default apply --filename ./sample/bitbucket-secret.yaml
 ```
 
-#### Create an Event Source for BitBucket Events
+### Create an Event Source for BitBucket Events
 
 In order to receive BitBucket events, you have to create a concrete Event
 Source for a specific namespace. Be sure to replace the
@@ -131,7 +152,7 @@ Then, apply that yaml using `kubectl`:
 kubectl --namespace default apply --filename ./sample/bitbucket-source.yaml
 ```
 
-#### Verify
+### Verify
 
 Verify that the BitBucket webhook was created by looking at the list of
 webhooks under the Settings tab in your BitBucket repository. A hook
@@ -141,7 +162,7 @@ should be listed that points to your Knative cluster. If you edit it, you can se
 
 ![BitBucket Webhook](./sample/webhook.png "BitBucket Webhook")
 
-#### Create Events
+### Create Events
 
 Create a push in your BitBucket repository. We will verify
 that the BitBucket event was sent to the Knative eventing system
@@ -181,7 +202,7 @@ X-Request-Id: 81b4603c-3f2b-9e0b-ace4-fe3a7aeb2047
 {...}
 ```
 
-#### Cleanup
+### Cleanup
 
 You can remove the BitBucket webhook by deleting the BitBucket Source:
 
