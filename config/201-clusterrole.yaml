@@ -18,7 +18,7 @@ metadata:
   name: bitbucket-controller
 rules:
   - apiGroups:
-      - bitbucketsources.nachocano.org
+      - sources.nachocano.org
     resources:
       - bitbucketsources
     verbs: &everything
@@ -30,7 +30,7 @@ rules:
       - patch
       - delete
   - apiGroups:
-      - bitbucketsources.nachocano.org
+      - sources.nachocano.org
     resources:
       - bitbucketsources/status
     verbs:
