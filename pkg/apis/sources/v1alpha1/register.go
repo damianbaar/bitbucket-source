@@ -8,7 +8,7 @@ import (
 
 var (
 	// SchemeGroupVersion is group version used to register these objects
-	SchemeGroupVersion = schema.GroupVersion{Group: "sources.eventing.knative.dev", Version: "v1alpha1"}
+	SchemeGroupVersion = schema.GroupVersion{Group: "sources.nachocano.org", Version: "v1alpha1"}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)

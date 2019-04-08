@@ -102,7 +102,7 @@ Source for a specific namespace. Be sure to replace the
 by your BitBucket user.
 
 ```yaml
-apiVersion: sources.eventing.knative.dev/v1alpha1
+apiVersion: sources.nachocano.org/v1alpha1
 kind: BitBucketSource
 metadata:
   name: bitbucket-source-sample
