@@ -18,10 +18,14 @@ require (
 	github.com/gophercloud/gophercloud v0.1.0 // indirect
 	github.com/gregjones/httpcache v0.0.0-20170728041850-787624de3eb7 // indirect
 	github.com/imdario/mergo v0.3.7 // indirect
+	github.com/k0kubun/pp v3.0.1+incompatible // indirect
 	github.com/knative/build v0.5.0 // indirect
 	github.com/knative/eventing-sources v0.9.0
 	github.com/knative/serving v0.9.0
+	github.com/ktrysmt/go-bitbucket v0.4.1
 	github.com/mattbaird/jsonpatch v0.0.0-20171005235357-81af80346b1a // indirect
+	github.com/mattn/go-colorable v0.1.4 // indirect
+	github.com/mitchellh/mapstructure v1.1.2 // indirect
 	github.com/pborman/uuid v1.2.0 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/prometheus/client_golang v1.1.0 // indirect

@@ -24,9 +24,11 @@ import (
 	"net/url"
 	"strings"
 
-	"knative.dev/pkg/logging"
+	"github.com/ktrysmt/go-bitbucket"
+
 	"go.uber.org/zap"
 	"golang.org/x/oauth2"
+	"knative.dev/pkg/logging"
 )
 
 const (
@@ -68,7 +70,24 @@ func NewClient(ctx context.Context, token *oauth2.Token) *Client {
 }
 
 // CreateHook creates a WebHook for 'owner' and 'repo'.
-func (c *Client) CreateHook(owner, repo string, hook *Hook) (*Hook, error) {
+func (c *Client) CreateHook(owner string, repo string, key string, secret string, hook *Hook) (*Hook, error) {
+	client := bitbucket.NewOAuth(key, secret)
+	opt := &bitbucket.WebhooksOptions{
+		Owner:       owner,
+		RepoSlug:    repo,
+		Active:      hook.Active,
+		Url:         hook.URL,
+		Events:      hook.Events,
+		Uuid:        hook.UUID,
+		Description: hook.Description,
+	}
+
+	res, err := client.Repositories.Webhooks.Create(opt)
+	if err != nil {
+		return hook, fmt.Errorf("invalid status (new api): %v", res)
+	}
+	fmt.Println(res)
+
 	if hook == nil {
 		return nil, fmt.Errorf("hook is nil")
 	}

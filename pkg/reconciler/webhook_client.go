@@ -20,10 +20,10 @@ import (
 	"context"
 	"fmt"
 
-	"knative.dev/pkg/logging"
 	"github.com/nachocano/bitbucket-source/pkg/bbclient"
 	"golang.org/x/oauth2/bitbucket"
 	"golang.org/x/oauth2/clientcredentials"
+	"knative.dev/pkg/logging"
 )
 
 type webhookOptions struct {
@@ -57,7 +57,7 @@ func (client bitBucketWebhookClient) Create(ctx context.Context, options *webhoo
 	hook := hookConfig(options)
 
 	var h *bbclient.Hook
-	h, err = bbClient.CreateHook(options.owner, options.repo, &hook)
+	h, err = bbClient.CreateHook(options.owner, options.repo, options.consumerKey, options.consumerSecret, &hook)
 
 	if err != nil {
 		return "", fmt.Errorf("failed to Create the BitBucket Webhook: %v", err)
