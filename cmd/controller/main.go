@@ -21,12 +21,20 @@ import (
 
 	"github.com/nachocano/bitbucket-source/pkg/apis"
 	controller "github.com/nachocano/bitbucket-source/pkg/reconciler"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"knative.dev/pkg/logging/logkey"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/runtime/signals"
 )
 
 func main() {
+	logCfg := zap.NewProductionConfig()
+	logCfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	logger, err := logCfg.Build()
+	logger = logger.With(zap.String(logkey.ControllerType, "bitbucket-controller-manager"))
+
 	// Get a config to talk to the apiserver.
 	cfg, err := config.GetConfig()
 	if err != nil {
@@ -47,7 +55,7 @@ func main() {
 	}
 
 	// Setup BitBucket Controller.
-	if err := controller.Add(mgr); err != nil {
+	if err := controller.Add(mgr, logger.Sugar()); err != nil {
 		log.Fatal(err)
 	}
 

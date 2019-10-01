@@ -246,7 +246,7 @@
 
 [[projects]]
   digest = "1:d9123e63c1a0241e114a7b711c150d3d9e193ed96f3714c000d31c0768acf88a"
-  name = "github.com/knative/pkg"
+  name = "knative.dev/pkg"
   packages = [
     "apis",
     "apis/duck",
@@ -877,9 +877,9 @@
     "github.com/knative/eventing-sources/pkg/controller/sinks",
     "github.com/knative/eventing-sources/pkg/controller/testing",
     "github.com/knative/eventing-sources/pkg/kncloudevents",
-    "github.com/knative/pkg/apis/duck",
-    "github.com/knative/pkg/apis/duck/v1alpha1",
-    "github.com/knative/pkg/logging",
+    "knative.dev/pkg/apis/duck",
+    "knative.dev/pkg/apis/duck/v1alpha1",
+    "knative.dev/pkg/logging",
     "github.com/knative/serving/pkg/apis/serving/v1alpha1",
     "github.com/knative/test-infra/scripts",
     "github.com/knative/test-infra/tools/dep-collector",

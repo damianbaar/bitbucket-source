@@ -88,7 +88,7 @@ func (a *Adapter) handleEvent(payload interface{}, hdr http.Header) error {
 		}.AsV02(),
 		Data: payload,
 	}
-	_, err = a.client.Send(context.TODO(), event)
+	_, _, err = a.client.Send(context.TODO(), event)
 	return err
 }
 

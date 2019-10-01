@@ -55,17 +55,23 @@ func MakeService(source *sourcesv1alpha1.BitBucketSource, receiveAdapterImage st
 			Labels:       labels,
 		},
 		Spec: servingv1alpha1.ServiceSpec{
-			RunLatest: &servingv1alpha1.RunLatestType{
-				Configuration: servingv1alpha1.ConfigurationSpec{
-					RevisionTemplate: servingv1alpha1.RevisionTemplateSpec{
-						Spec: servingv1alpha1.RevisionSpec{
-							ServiceAccountName: source.Spec.ServiceAccountName,
-							Container: corev1.Container{
-								Image: receiveAdapterImage,
-								Env:   env,
-								Args:  containerArgs,
-							},
+			ConfigurationSpec: servingv1alpha1.ConfigurationSpec{
+				Template: &servingv1alpha1.RevisionTemplateSpec{
+					Spec: servingv1alpha1.RevisionSpec{
+						DeprecatedContainer: &corev1.Container{
+							Image: receiveAdapterImage,
+							Env:   env,
+							Args:  containerArgs,
 						},
+						// Image: receiveAdapterImage,
+						// Env:   env,
+						// Args:  containerArgs,
+						// ServiceAccountName: source.Spec.ServiceAccountName,
+						// Container: corev1.Container{
+						// 	Image: receiveAdapterImage,
+						// 	Env:   env,
+						// 	Args:  containerArgs,
+						// },
 					},
 				},
 			},

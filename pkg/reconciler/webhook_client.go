@@ -20,7 +20,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/knative/pkg/logging"
+	"knative.dev/pkg/logging"
 	"github.com/nachocano/bitbucket-source/pkg/bbclient"
 	"golang.org/x/oauth2/bitbucket"
 	"golang.org/x/oauth2/clientcredentials"

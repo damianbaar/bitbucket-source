@@ -24,7 +24,6 @@ import (
 
 	"github.com/knative/eventing-sources/pkg/controller/sdk"
 	"github.com/knative/eventing-sources/pkg/controller/sinks"
-	"github.com/knative/pkg/logging"
 	servingv1alpha1 "github.com/knative/serving/pkg/apis/serving/v1alpha1"
 	sourcesv1alpha1 "github.com/nachocano/bitbucket-source/pkg/apis/sources/v1alpha1"
 	"github.com/nachocano/bitbucket-source/pkg/reconciler/resources"
@@ -37,6 +36,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/tools/record"
+	"knative.dev/pkg/logging"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
@@ -72,7 +72,7 @@ type webhookArgs struct {
 // Add creates a new BitBucketSource Controller and adds it to the
 // Manager with default RBAC. The Manager will set fields on the
 // Controller and Start it when the Manager is Started.
-func Add(mgr manager.Manager) error {
+func Add(mgr manager.Manager, logger *zap.SugaredLogger) error {
 	receiveAdapterImage, defined := os.LookupEnv(raImageEnvVar)
 	if !defined {
 		return fmt.Errorf("required environment variable %q not defined", raImageEnvVar)
@@ -90,7 +90,7 @@ func Add(mgr manager.Manager) error {
 		},
 	}
 
-	return p.Add(mgr)
+	return p.Add(mgr, logger)
 }
 
 // reconciler reconciles a BitBucketSource object.
@@ -208,7 +208,7 @@ func (r *reconciler) finalize(ctx context.Context, source *sourcesv1alpha1.BitBu
 
 func (r *reconciler) domainFrom(ksvc *servingv1alpha1.Service, source *sourcesv1alpha1.BitBucketSource) (string, error) {
 	routeCondition := ksvc.Status.GetCondition(servingv1alpha1.ServiceConditionRoutesReady)
-	receiveAdapterDomain := ksvc.Status.Domain
+	receiveAdapterDomain := ksvc.Status.Address.GetURL().Host
 	if routeCondition != nil && routeCondition.Status == corev1.ConditionTrue && receiveAdapterDomain != "" {
 		return receiveAdapterDomain, nil
 	}
