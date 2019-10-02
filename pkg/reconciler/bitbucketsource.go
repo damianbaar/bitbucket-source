@@ -273,7 +273,7 @@ func (r *reconciler) createWebhook(ctx context.Context, args *webhookArgs) (stri
 		return "", err
 	}
 
-	hookOptions := &webhookOptions{
+	hookOptions := &WebhookOptions{
 		consumerKey:    args.consumerKey,
 		consumerSecret: args.consumerSecret,
 		domain:         args.domain,
@@ -294,7 +294,7 @@ func (r *reconciler) deleteWebhook(ctx context.Context, args *webhookArgs) error
 		return err
 	}
 
-	hookOptions := &webhookOptions{
+	hookOptions := &WebhookOptions{
 		uuid:           args.source.Status.WebhookUUIDKey,
 		owner:          owner,
 		repo:           repo,

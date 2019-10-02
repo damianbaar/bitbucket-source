@@ -27,7 +27,6 @@ import (
 	"github.com/ktrysmt/go-bitbucket"
 
 	"go.uber.org/zap"
-	"golang.org/x/oauth2"
 	"knative.dev/pkg/logging"
 )
 
@@ -48,22 +47,22 @@ type Hook struct {
 
 // Client struct used to send http.Requests to BitBucket.
 type Client struct {
-	client    *http.Client
-	logger    *zap.SugaredLogger
-	token     *oauth2.Token
+	client *http.Client
+	logger *zap.SugaredLogger
+	// token     *oauth2.Token
 	baseUrl   *url.URL
 	userAgent string
 }
 
 // NewClient creates a new Client for sending http.Requests to BitBucket.
-func NewClient(ctx context.Context, token *oauth2.Token) *Client {
+func NewClient(ctx context.Context) *Client {
 	logger := logging.FromContext(ctx)
 	httpClient := http.DefaultClient
 	baseUrl, _ := url.Parse(defaultBaseUrl)
 	return &Client{
-		client:    httpClient,
-		logger:    logger,
-		token:     token,
+		client: httpClient,
+		logger: logger,
+		// token:     "",
 		baseUrl:   baseUrl,
 		userAgent: defaultUserAgent,
 	}
@@ -72,9 +71,9 @@ func NewClient(ctx context.Context, token *oauth2.Token) *Client {
 // CreateHook creates a WebHook for 'owner' and 'repo'.
 func (c *Client) CreateHook(owner string, repo string, key string, secret string, hook *Hook) (*Hook, error) {
 	// client := bitbucket.NewOAuthClientCredentials(key, secret)
-	if hook == nil {
-		return nil, fmt.Errorf("hook is nil")
-	}
+	// if hook == nil {
+	// 	return nil, fmt.Errorf("hook is nil")
+	// }
 
 	client := bitbucket.NewOAuthClientCredentials(key, secret)
 	opt := &bitbucket.WebhooksOptions{
@@ -87,35 +86,37 @@ func (c *Client) CreateHook(owner string, repo string, key string, secret string
 		Description: hook.Description,
 	}
 
+	fmt.Printf("before!!! %v", client)
+	fmt.Printf("before!!! %v", opt)
 	res, err := client.Repositories.Webhooks.Create(opt)
 	if err != nil {
 		fmt.Errorf("error in webhook create (new api): %v %v", res, err)
 	}
 	fmt.Printf("response!!! %v", res)
 
-	h := new(Hook)
+	// h := new(Hook)
 	// err = c.doRequest("POST", urlStr, body, h)
-	return h, err
+	// return h, err
 
 	// if hook == nil {
 	// 	return nil, fmt.Errorf("hook is nil")
 	// }
-	// body, err := createHookBody(hook)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// var urlStr string
-	// if repo == "" {
-	// 	// For every repo of the owner.
-	// 	urlStr = fmt.Sprintf("teams/%s/hooks", owner)
-	// } else {
-	// 	// For a specific repo of the owner.
-	// 	urlStr = fmt.Sprintf("repositories/%s/%s/hooks", owner, repo)
-	// }
+	body, err := createHookBody(hook)
+	if err != nil {
+		return nil, err
+	}
+	var urlStr string
+	if repo == "" {
+		// For every repo of the owner.
+		urlStr = fmt.Sprintf("teams/%s/hooks", owner)
+	} else {
+		// For a specific repo of the owner.
+		urlStr = fmt.Sprintf("repositories/%s/%s/hooks", owner, repo)
+	}
 
-	// h := new(Hook)
-	// err = c.doRequest("POST", urlStr, body, h)
-	// return h, err
+	h := new(Hook)
+	err = c.doRequest("POST", urlStr, body, h)
+	return h, err
 }
 
 // DeleteHook deletes the WebHook 'hookUUID' previously registered for 'owner' and 'repo'.
@@ -160,7 +161,7 @@ func (c *Client) doRequest(method, urlStr string, body string, v interface{}) er
 	req.Header.Set("Content-Type", mediaTypeJson)
 	req.Header.Set("Accept", mediaTypeJson)
 	// Add the Oauth2 accessToken in the Authorization header.
-	req.Header.Set("Authorization", "Bearer "+c.token.AccessToken)
+	// req.Header.Set("Authorization", "Bearer "+c.token.AccessToken)
 
 	resp, err := c.client.Do(req)
 	if err != nil {

@@ -37,6 +37,8 @@ type webhookOptions struct {
 	events         []string
 }
 
+type WebhookOptions = webhookOptions
+
 type webhookClient interface {
 	Create(ctx context.Context, options *webhookOptions) (string, error)
 	Delete(ctx context.Context, options *webhookOptions) error
@@ -101,7 +103,7 @@ func createBitBucketClient(ctx context.Context, options *webhookOptions) (*bbcli
 		return nil, nil, err
 	}
 
-	return bbclient.NewClient(ctx, token), token, nil
+	return bbclient.NewClient(ctx), token, nil
 }
 
 func hookConfig(options *webhookOptions) bbclient.Hook {
@@ -113,3 +115,5 @@ func hookConfig(options *webhookOptions) bbclient.Hook {
 	}
 	return hook
 }
+
+var HookConfig = hookConfig
