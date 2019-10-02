@@ -72,6 +72,10 @@ func NewClient(ctx context.Context, token *oauth2.Token) *Client {
 // CreateHook creates a WebHook for 'owner' and 'repo'.
 func (c *Client) CreateHook(owner string, repo string, key string, secret string, hook *Hook) (*Hook, error) {
 	// client := bitbucket.NewOAuthClientCredentials(key, secret)
+	if hook == nil {
+		return nil, fmt.Errorf("hook is nil")
+	}
+
 	client := bitbucket.NewOAuthClientCredentials(key, secret)
 	opt := &bitbucket.WebhooksOptions{
 		Owner:       owner,
@@ -83,33 +87,35 @@ func (c *Client) CreateHook(owner string, repo string, key string, secret string
 		Description: hook.Description,
 	}
 
-	fmt.Printf("status (new key): %v", client)
 	res, err := client.Repositories.Webhooks.Create(opt)
-	fmt.Printf("status (new key): %v", key)
 	if err != nil {
-		fmt.Errorf("invalid status (new api): %v %v", res, err)
+		fmt.Errorf("error in webhook create (new api): %v %v", res, err)
 	}
-	fmt.Println(res)
-
-	if hook == nil {
-		return nil, fmt.Errorf("hook is nil")
-	}
-	body, err := createHookBody(hook)
-	if err != nil {
-		return nil, err
-	}
-	var urlStr string
-	if repo == "" {
-		// For every repo of the owner.
-		urlStr = fmt.Sprintf("teams/%s/hooks", owner)
-	} else {
-		// For a specific repo of the owner.
-		urlStr = fmt.Sprintf("repositories/%s/%s/hooks", owner, repo)
-	}
+	fmt.Printf("response!!! %v", res)
 
 	h := new(Hook)
-	err = c.doRequest("POST", urlStr, body, h)
+	// err = c.doRequest("POST", urlStr, body, h)
 	return h, err
+
+	// if hook == nil {
+	// 	return nil, fmt.Errorf("hook is nil")
+	// }
+	// body, err := createHookBody(hook)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// var urlStr string
+	// if repo == "" {
+	// 	// For every repo of the owner.
+	// 	urlStr = fmt.Sprintf("teams/%s/hooks", owner)
+	// } else {
+	// 	// For a specific repo of the owner.
+	// 	urlStr = fmt.Sprintf("repositories/%s/%s/hooks", owner, repo)
+	// }
+
+	// h := new(Hook)
+	// err = c.doRequest("POST", urlStr, body, h)
+	// return h, err
 }
 
 // DeleteHook deletes the WebHook 'hookUUID' previously registered for 'owner' and 'repo'.
