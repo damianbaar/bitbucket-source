@@ -71,7 +71,8 @@ func NewClient(ctx context.Context, token *oauth2.Token) *Client {
 
 // CreateHook creates a WebHook for 'owner' and 'repo'.
 func (c *Client) CreateHook(owner string, repo string, key string, secret string, hook *Hook) (*Hook, error) {
-	client := bitbucket.NewOAuthClientCredentials(key, secret)
+	// client := bitbucket.NewOAuthClientCredentials(key, secret)
+	client := bitbucket.NewOAuth(key, secret)
 	opt := &bitbucket.WebhooksOptions{
 		Owner:       owner,
 		RepoSlug:    repo,
@@ -83,8 +84,9 @@ func (c *Client) CreateHook(owner string, repo string, key string, secret string
 	}
 
 	res, err := client.Repositories.Webhooks.Create(opt)
+	fmt.Printf("status (new key): %v", key)
 	if err != nil {
-		return hook, fmt.Errorf("invalid status (new api): %v", res)
+		fmt.Errorf("invalid status (new api): %v %v", res, err)
 	}
 	fmt.Println(res)
 
