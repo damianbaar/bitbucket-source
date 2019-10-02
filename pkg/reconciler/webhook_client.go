@@ -21,6 +21,7 @@ import (
 	"fmt"
 
 	"github.com/nachocano/bitbucket-source/pkg/bbclient"
+	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/bitbucket"
 	"golang.org/x/oauth2/clientcredentials"
 	"knative.dev/pkg/logging"
@@ -48,7 +49,7 @@ func (client bitBucketWebhookClient) Create(ctx context.Context, options *webhoo
 
 	logger.Info("Creating BitBucket WebHook")
 
-	bbClient, err := createBitBucketClient(ctx, options)
+	bbClient, _, err := createBitBucketClient(ctx, options)
 
 	if err != nil {
 		return "", err
@@ -71,7 +72,7 @@ func (client bitBucketWebhookClient) Delete(ctx context.Context, options *webhoo
 
 	logger.Info("Deleting BitBucket WebHook: %q", options.uuid)
 
-	bbClient, err := createBitBucketClient(ctx, options)
+	bbClient, _, err := createBitBucketClient(ctx, options)
 
 	if err != nil {
 		return err
@@ -87,7 +88,7 @@ func (client bitBucketWebhookClient) Delete(ctx context.Context, options *webhoo
 	return nil
 }
 
-func createBitBucketClient(ctx context.Context, options *webhookOptions) (*bbclient.Client, error) {
+func createBitBucketClient(ctx context.Context, options *webhookOptions) (*bbclient.Client, *oauth2.Token, error) {
 	// Retrieve an access token based on the Oauth Consumer credentials we set in the BitBucket account.
 	// It cannot be a static one as it can expire.
 	conf := &clientcredentials.Config{
@@ -97,10 +98,10 @@ func createBitBucketClient(ctx context.Context, options *webhookOptions) (*bbcli
 	}
 	token, err := conf.Token(ctx)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return bbclient.NewClient(ctx, token), nil
+	return bbclient.NewClient(ctx, token), token, nil
 }
 
 func hookConfig(options *webhookOptions) bbclient.Hook {
