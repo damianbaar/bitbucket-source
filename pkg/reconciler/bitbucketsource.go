@@ -26,6 +26,7 @@ import (
 	"github.com/knative/eventing-sources/pkg/controller/sinks"
 	servingv1alpha1 "github.com/knative/serving/pkg/apis/serving/v1alpha1"
 	sourcesv1alpha1 "github.com/nachocano/bitbucket-source/pkg/apis/sources/v1alpha1"
+	bbclient "github.com/nachocano/bitbucket-source/pkg/bbclient"
 	"github.com/nachocano/bitbucket-source/pkg/reconciler/resources"
 	"go.uber.org/zap"
 	corev1 "k8s.io/api/core/v1"
@@ -273,13 +274,13 @@ func (r *reconciler) createWebhook(ctx context.Context, args *webhookArgs) (stri
 		return "", err
 	}
 
-	hookOptions := &WebhookOptions{
-		consumerKey:    args.consumerKey,
-		consumerSecret: args.consumerSecret,
-		domain:         args.domain,
-		owner:          owner,
-		repo:           repo,
-		events:         args.source.Spec.EventTypes,
+	hookOptions := &bbclient.WebhookOptions{
+		ConsumerKey:    args.consumerKey,
+		ConsumerSecret: args.consumerSecret,
+		Domain:         args.domain,
+		Owner:          owner,
+		Repo:           repo,
+		Events:         args.source.Spec.EventTypes,
 	}
 	hookUUID, err := r.webhookClient.Create(ctx, hookOptions)
 	if err != nil {
@@ -294,12 +295,12 @@ func (r *reconciler) deleteWebhook(ctx context.Context, args *webhookArgs) error
 		return err
 	}
 
-	hookOptions := &WebhookOptions{
-		uuid:           args.source.Status.WebhookUUIDKey,
-		owner:          owner,
-		repo:           repo,
-		consumerKey:    args.consumerKey,
-		consumerSecret: args.consumerSecret,
+	hookOptions := &bbclient.WebhookOptions{
+		Uuid:           args.source.Status.WebhookUUIDKey,
+		Owner:          owner,
+		Repo:           repo,
+		ConsumerKey:    args.consumerKey,
+		ConsumerSecret: args.consumerSecret,
 	}
 	return r.webhookClient.Delete(ctx, hookOptions)
 }

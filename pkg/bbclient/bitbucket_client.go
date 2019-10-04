@@ -22,16 +22,16 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
-
-	"github.com/ktrysmt/go-bitbucket"
+	"time"
 
 	"go.uber.org/zap"
 	"knative.dev/pkg/logging"
 )
 
 const (
-	defaultBaseUrl   = "https://api.bitbucket.org/2.0/"
+	defaultBaseUrl   = "https://api.bitbucket.org/2.0"
 	defaultUserAgent = "go-bitbucket"
 	mediaTypeJson    = "application/json"
 )
@@ -47,76 +47,81 @@ type Hook struct {
 
 // Client struct used to send http.Requests to BitBucket.
 type Client struct {
-	client *http.Client
-	logger *zap.SugaredLogger
-	// token     *oauth2.Token
+	client    *http.Client
+	logger    *zap.SugaredLogger
+	username  string
+	password  string
 	baseUrl   *url.URL
 	userAgent string
 }
 
+type User struct {
+	Username string
+	Password string
+}
+
+type userKey struct{}
+
+type ChainableContext func(ctx context.Context) context.Context
+
+func WithAuth(user string, password string) ChainableContext {
+	return func(ctx context.Context) context.Context {
+		return context.WithValue(ctx, userKey{}, User{
+			Username: user,
+			Password: password,
+		})
+	}
+}
+
+func fromContext(ctx context.Context) (*User, bool) {
+	u, ok := ctx.Value(userKey{}).(*User)
+	return u, ok
+}
+
 // NewClient creates a new Client for sending http.Requests to BitBucket.
-func NewClient(ctx context.Context) *Client {
+func NewClient(ctx context.Context, user string, password string) *Client {
 	logger := logging.FromContext(ctx)
-	httpClient := http.DefaultClient
+	timeout := time.Duration(5 * time.Second)
+	httpClient := http.Client{
+		Timeout: timeout,
+	}
 	baseUrl, _ := url.Parse(defaultBaseUrl)
 	return &Client{
-		client: httpClient,
-		logger: logger,
-		// token:     "",
+		client:    &httpClient,
+		logger:    logger,
+		username:  user,
+		password:  password,
 		baseUrl:   baseUrl,
 		userAgent: defaultUserAgent,
 	}
 }
 
+type WebhookOptions struct {
+	Uuid           string
+	ConsumerKey    string
+	ConsumerSecret string
+	Domain         string
+	Owner          string
+	Repo           string
+	Events         []string
+}
+
 // CreateHook creates a WebHook for 'owner' and 'repo'.
-func (c *Client) CreateHook(owner string, repo string, key string, secret string, hook *Hook) (*Hook, error) {
-	// client := bitbucket.NewOAuthClientCredentials(key, secret)
-	// if hook == nil {
-	// 	return nil, fmt.Errorf("hook is nil")
-	// }
+func (c *Client) CreateHook(options *WebhookOptions, hook *Hook) (*Hook, error) {
+	requestBody, err := json.Marshal(hook)
+	os.Stdout.Write(requestBody)
 
-	client := bitbucket.NewOAuthClientCredentials(key, secret)
-	opt := &bitbucket.WebhooksOptions{
-		Owner:       owner,
-		RepoSlug:    repo,
-		Active:      hook.Active,
-		Url:         hook.URL,
-		Events:      hook.Events,
-		Uuid:        hook.UUID,
-		Description: hook.Description,
-	}
-
-	fmt.Printf("before!!! %v", client)
-	fmt.Printf("before!!! %v", opt)
-	res, err := client.Repositories.Webhooks.Create(opt)
-	if err != nil {
-		fmt.Errorf("error in webhook create (new api): %v %v", res, err)
-	}
-	fmt.Printf("response!!! %v", res)
-
-	// h := new(Hook)
-	// err = c.doRequest("POST", urlStr, body, h)
-	// return h, err
-
-	// if hook == nil {
-	// 	return nil, fmt.Errorf("hook is nil")
-	// }
-	body, err := createHookBody(hook)
-	if err != nil {
-		return nil, err
-	}
 	var urlStr string
-	if repo == "" {
+	if options.Repo == "" {
 		// For every repo of the owner.
-		urlStr = fmt.Sprintf("teams/%s/hooks", owner)
+		urlStr = fmt.Sprintf("teams/%s/hooks", options.Owner)
 	} else {
 		// For a specific repo of the owner.
-		urlStr = fmt.Sprintf("repositories/%s/%s/hooks", owner, repo)
+		urlStr = fmt.Sprintf("repositories/%s/%s/hooks", options.Owner, options.Repo)
 	}
 
-	h := new(Hook)
-	err = c.doRequest("POST", urlStr, body, h)
-	return h, err
+	err = c.doRequest("POST", urlStr, string(requestBody), hook)
+	return hook, err
 }
 
 // DeleteHook deletes the WebHook 'hookUUID' previously registered for 'owner' and 'repo'.
@@ -131,24 +136,10 @@ func (c *Client) DeleteHook(owner, repo, hookUUID string) error {
 	return c.doRequest("DELETE", urlStr, "", nil)
 }
 
-// createHookBody marshals the WebHook body into json format.
-func createHookBody(hook *Hook) (string, error) {
-	body := map[string]interface{}{}
-	body["description"] = hook.Description
-	body["url"] = hook.URL
-	body["events"] = hook.Events
-	body["active"] = hook.Active
-	data, err := json.Marshal(body)
-	if err != nil {
-		return "", err
-	}
-	return string(data), nil
-}
-
 // doRequest performs an http.Request to BitBucket. If v is not nil, it attempts to unmarshal the response to
 // that particular struct.
 func (c *Client) doRequest(method, urlStr string, body string, v interface{}) error {
-	u, err := c.baseUrl.Parse(urlStr)
+	u, err := c.baseUrl.Parse(fmt.Sprintf("%s/%s", defaultBaseUrl, urlStr))
 	if err != nil {
 		return err
 	}
@@ -157,11 +148,10 @@ func (c *Client) doRequest(method, urlStr string, body string, v interface{}) er
 
 	b := strings.NewReader(body)
 	req, err := http.NewRequest(method, u.String(), b)
-	req.Header.Set("User-Agent", c.userAgent)
+	// req.Header.Set("User-Agent", c.userAgent)
 	req.Header.Set("Content-Type", mediaTypeJson)
-	req.Header.Set("Accept", mediaTypeJson)
-	// Add the Oauth2 accessToken in the Authorization header.
-	// req.Header.Set("Authorization", "Bearer "+c.token.AccessToken)
+	// req.Header.Set("Accept", mediaTypeJson)
+	req.SetBasicAuth(c.username, c.password)
 
 	resp, err := c.client.Do(req)
 	if err != nil {

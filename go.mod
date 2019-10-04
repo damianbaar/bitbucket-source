@@ -10,7 +10,6 @@ require (
 	// github.com/cloudevents/sdk-go v0.0.0-20190327171032-e00e75c8a1be
 	github.com/go-logr/zapr v0.1.1 // indirect
 	github.com/gogo/protobuf v1.3.0
-	github.com/golang/groupcache v0.0.0-20190129154638-5b532d6fd5ef // indirect
 	github.com/golang/protobuf v1.3.2
 	github.com/google/go-cmp v0.3.0
 	github.com/google/go-containerregistry v0.0.0-20190206233756-dbc4da98389f // indirect
@@ -23,20 +22,26 @@ require (
 	github.com/knative/eventing-sources v0.9.0
 	github.com/knative/serving v0.9.0
 	github.com/ktrysmt/go-bitbucket v0.4.1
+	github.com/magiconair/properties v1.8.1 // indirect
 	github.com/mattbaird/jsonpatch v0.0.0-20171005235357-81af80346b1a // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
-	github.com/mitchellh/mapstructure v1.1.2 // indirect
 	github.com/pborman/uuid v1.2.0 // indirect
+	github.com/pelletier/go-toml v1.4.0 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/prometheus/client_golang v1.1.0 // indirect
+	github.com/spf13/cobra v0.0.5
+	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/viper v1.4.0 // indirect
 	go.uber.org/multierr v1.2.0 // indirect
 	go.uber.org/zap v1.10.0
 	golang.org/x/crypto v0.0.0-20190611184440-5c40567a22f8 // indirect
 	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
+	golang.org/x/sys v0.0.0-20191002091554-b397fe3ad8ed // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/webhooks.v3 v3.13.0
 	gopkg.in/inf.v0 v0.9.1 // indirect
+	gopkg.in/yaml.v2 v2.2.3 // indirect
 	k8s.io/api v0.0.0-20190226173710-145d52631d00
 	// go.uber.org/zap v1.9.1
 	// golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
