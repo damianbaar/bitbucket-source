@@ -108,7 +108,15 @@ type WebhookOptions struct {
 
 // CreateHook creates a WebHook for 'owner' and 'repo'.
 func (c *Client) CreateHook(options *WebhookOptions, hook *Hook) (*Hook, error) {
-	requestBody, err := json.Marshal(hook)
+	// INFO not sure why there are extra fields
+	// {\"url\":\"http://bitbucket-source-sample-fxkjd.dev-infra.svc.cluster.local\",\"description\":\"knative-sources\",\"events\":[\"repo:push\"],\"active\":true}","knative.dev/controller":"bitbucket-controller-manager","request":"dev-infra/bitbucket-source-sample"}
+	requestBody, err := json.Marshal(Hook{
+		URL:         hook.URL,
+		Description: hook.Description,
+		Events:      hook.Events,
+		Active:      hook.Active,
+		UUID:        hook.UUID,
+	})
 	os.Stdout.Write(requestBody)
 
 	var urlStr string
