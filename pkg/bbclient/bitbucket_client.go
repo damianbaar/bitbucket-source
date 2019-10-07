@@ -153,7 +153,11 @@ func (c *Client) doRequest(method, urlStr string, body string, v interface{}) er
 	// req.Header.Set("Accept", mediaTypeJson)
 	req.SetBasicAuth(c.username, c.password)
 
+	c.logger.Infof("Request %v", req)
+
 	resp, err := c.client.Do(req)
+	c.logger.Infof("DO %v %v", resp, err)
+	c.logger.Infof("DO %s", body)
 	if err != nil {
 		return err
 	}
