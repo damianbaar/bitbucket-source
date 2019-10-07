@@ -111,7 +111,8 @@ func (c *Client) CreateHook(options *WebhookOptions, hook *Hook) (*Hook, error) 
 	// INFO not sure why there are extra fields
 	// {\"url\":\"http://bitbucket-source-sample-fxkjd.dev-infra.svc.cluster.local\",\"description\":\"knative-sources\",\"events\":[\"repo:push\"],\"active\":true}","knative.dev/controller":"bitbucket-controller-manager","request":"dev-infra/bitbucket-source-sample"}
 	requestBody, err := json.Marshal(Hook{
-		URL:         hook.URL,
+		// FIXME just for test
+		URL:         "http://buildit.com", // INFO make it configurable
 		Description: hook.Description,
 		Events:      hook.Events,
 		Active:      hook.Active,
